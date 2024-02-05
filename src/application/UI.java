@@ -3,6 +3,7 @@ package application;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import chess.ChessMatch;
 import chess.ChessPiece;
 import chess.ChessPosition;
 import chess.Color;
@@ -48,6 +49,13 @@ public class UI {
 			throw new InputMismatchException("Error: input parameters do not correspond to row or column in board");
 		}
 		
+	}
+	
+	public static void printMatch(ChessMatch match) {
+		printBoard(match.getPieces());
+		System.out.println();
+		System.out.println("Turn: " + match.getTurn());
+		System.out.println("Waiting for player: " + match.getCurrentPlayer());
 	}
 	
 	public static void printBoard(ChessPiece[][] match) {
