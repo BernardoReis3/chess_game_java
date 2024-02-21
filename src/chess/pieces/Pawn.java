@@ -60,6 +60,7 @@ public class Pawn extends ChessPiece{
 		return matrix;
 	}
 	
+	@Override
 	public String toString() {
 		return "P";
 	}
