@@ -45,8 +45,12 @@ public class Main {
 			
 			if(chessMatch.getPromotedPiece() != null) {
 				System.out.println("Enter promoted piece (B/N/Q/R): ");
-				String type = scanner.nextLine();
-				chessMatch.replacePromotedPiece(type);
+				String typePiece = scanner.nextLine().toUpperCase();
+				while (!typePiece.equals("B") && !typePiece.equals("N") && !typePiece.equals("R") && !typePiece.equals("Q")) {
+					System.out.println("Invalid value Type, enter new value: ");
+					typePiece = scanner.nextLine().toUpperCase();
+				}
+				chessMatch.replacePromotedPiece(typePiece);
 			}
 			
 			}

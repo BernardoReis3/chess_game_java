@@ -1,9 +1,7 @@
 package chess;
 
-import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import boardgame.Board;
@@ -145,7 +143,7 @@ public class ChessMatch {
 			throw new IllegalStateException("Cannot promote a non existent piece");
 		}
 		if(!typePiece.equals("B") && !typePiece.equals("N") && !typePiece.equals("R") && !typePiece.equals("Q")) {
-			throw new InvalidParameterException("Invalid piece type to promote");
+			return promoted;
 		}
 		Position pos = promoted.getChessPosition().toPosition();
 		Piece p = board.removePiece(pos);
