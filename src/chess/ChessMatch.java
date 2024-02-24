@@ -1,5 +1,6 @@
 package chess;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collector;
@@ -23,6 +24,8 @@ public class ChessMatch {
 	private boolean check;
 	private boolean checkMate;
 	private ChessPiece enPassantVulmerable;
+	private ChessPiece promoted;
+	
 	
 	private List<Piece> piecesBoard = new ArrayList<>();
 	private List<Piece> capturedPieces = new ArrayList<>();
@@ -56,6 +59,10 @@ public class ChessMatch {
 	
 	public ChessPiece getEnPassantVulnerable() {
 		return enPassantVulmerable;
+	}
+	
+	public ChessPiece getPromotedPiece() {
+		return promoted;
 	}
 	
 	private void changeTurn() {
@@ -133,6 +140,34 @@ public class ChessMatch {
 		return board.piece(position).possibleMoves();
 	}
 	
+	public ChessPiece replacePromotedPiece(String typePiece) {
+		if(promoted == null) {
+			throw new IllegalStateException("Cannot promote a non existent piece");
+		}
+		if(!typePiece.equals("B") && !typePiece.equals("N") && !typePiece.equals("R") && !typePiece.equals("Q")) {
+			throw new InvalidParameterException("Invalid piece type to promote");
+		}
+		Position pos = promoted.getChessPosition().toPosition();
+		Piece p = board.removePiece(pos);
+		piecesBoard.remove(p);
+		
+		ChessPiece replacedTypePiece = newPiece(typePiece, promoted.getColor());
+		board.placePiece(replacedTypePiece, pos);
+		piecesBoard.add(replacedTypePiece);
+		
+		return replacedTypePiece;
+	}
+	
+	public ChessPiece newPiece(String type, Color color) {
+		if(type.equals("B"))
+			return new Bishop(board, color);
+		if(type.equals("N"))
+			return new Knight(board, color);
+		if(type.equals("Q"))
+			return new Queen(board, color);
+		return new Rook(board, color);
+	}
+	
 	public ChessPiece performChessMove(ChessPosition sourcePosition, ChessPosition targetPosition) {
 		Position sourceP = sourcePosition.toPosition();
 		Position targetP = targetPosition.toPosition();
@@ -142,6 +177,16 @@ public class ChessMatch {
 		
 		ChessPiece movedPiece = (ChessPiece) board.piece(targetP);
 		
+		//promotion move
+		promoted = null;
+		if (movedPiece instanceof Pawn) {
+			if(movedPiece.getColor() == Color.WHITE && targetP.getRow() == 0 || (movedPiece.getColor() == Color.BLACK && targetP.getRow() == 7)) {
+				promoted = (ChessPiece) board.piece(targetP);
+				promoted = replacePromotedPiece("Q");
+			}
+		}
+		
+				
 		if(testCheck(currentPlayer)) {
 			undoMove(sourceP, targetP, capturedPiece);
 			throw new ChessException("You put yourself in check: undo move");

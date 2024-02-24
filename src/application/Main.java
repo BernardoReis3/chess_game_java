@@ -43,6 +43,12 @@ public class Main {
 				capturedPieces.add(capturedPiece);
 			}
 			
+			if(chessMatch.getPromotedPiece() != null) {
+				System.out.println("Enter promoted piece (B/N/Q/R): ");
+				String type = scanner.nextLine();
+				chessMatch.replacePromotedPiece(type);
+			}
+			
 			}
 			catch (ChessException ce) {
 				System.out.println(ce.getMessage());
